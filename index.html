@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farah Elnagar | Creative Graphic Designer</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0a0f1d',
+                        card: '#131c31',
+                        accent: '#06b6d4',
+                        accentHover: '#0891b2',
+                        secondary: '#818cf8'
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0f1d; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
+
+        .cursor-dot, .cursor-ring {
+            pointer-events: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+        }
+        .cursor-dot { width: 8px; height: 8px; background-color: #06b6d4; }
+        .cursor-ring { width: 36px; height: 36px; border: 2px solid rgba(6, 182, 212, 0.5); transition: width 0.2s, height 0.2s; }
+
+        .glow-box { box-shadow: 0 0 30px -5px rgba(6, 182, 212, 0.2); }
+        .glow-box:hover { box-shadow: 0 0 40px 0px rgba(6, 182, 212, 0.4); }
+
+        .glass-nav {
+            background: rgba(10, 15, 29, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .glass-card {
+            background: rgba(19, 28, 49, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-dark text-slate-100 font-sans selection:bg-accent selection:text-dark overflow-x-hidden">
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot hidden md:block" id="cursorDot"></div>
+    <div class="cursor-ring hidden md:block" id="cursorRing"></div>
+
+    <!-- Background Particle Canvas -->
+    <canvas id="bgCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
+
+    <!-- Header & Navigation -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-nav border-b border-slate-800/60 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#home" class="flex items-center gap-3 group">
+                <div class="relative w-11 h-11 rounded-full p-0.5 bg-gradient-to-tr from-accent to-secondary overflow-hidden group-hover:scale-105 transition-transform">
+                    <img src="ChatGPT Image Oct 6, 2026, 03_44_31 PM.png" alt="Farah Elnagar" class="w-full h-full object-cover rounded-full">
+                </div>
+                <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-accent bg-clip-text text-transparent">
+                    Farah Elnagar
+                </span>
+            </a>
+
+            <!-- Ordered Nav Links -->
+            <nav class="hidden xl:flex items-center gap-5 text-sm font-medium text-slate-300">
+                <a href="#home" class="hover:text-accent transition-colors">Home</a>
+                <a href="#about" class="hover:text-accent transition-colors">About</a>
+                <a href="#education" class="hover:text-accent transition-colors">Education</a>
+                <a href="#experience" class="hover:text-accent transition-colors">Experience</a>
+                <a href="#skills" class="hover:text-accent transition-colors">Skills</a>
+                <a href="#projects" class="hover:text-accent transition-colors">Projects</a>
+                <a href="#testimonials" class="hover:text-accent transition-colors">Testimonials</a>
+                <a href="#services" class="hover:text-accent transition-colors">Services</a>
+                <a href="#contact" class="hover:text-accent transition-colors">Get in touch</a>
+            </nav>
+
+            <div class="hidden md:flex items-center gap-4">
+                <a href="Farah_Mohamed_Ismail _Hassan_CV edit_3.pdf" download="Farah_Mohamed_Ismail_CV.pdf" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-accent to-secondary text-dark font-semibold text-sm shadow-lg shadow-cyan-500/20 hover:opacity-90 transition-all flex items-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-download"></i> Download CV
+                </a>
+            </div>
+
+            <button id="menuBtn" class="xl:hidden text-2xl text-slate-200 hover:text-accent focus:outline-none">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <div id="mobileMenu" class="hidden xl:hidden glass-card border-t border-slate-800 px-6 py-6 space-y-4 shadow-2xl">
+            <a href="#home" class="block text-base font-medium text-slate-300 hover:text-accent mobile-link">Home</a>
+            <a href="#about" class="block text-base font-medium text-slate-300 hover:text-accent mobile-link">About</a>
+            <a href="#education" class="block text-base font-medium text-slate-300 hover:text-accent mobile-link">Education</a>
+            <a href="#experience" class="block text-base font-medium text-slate-300 hover:text-accent mobile-link">Experience</a>
+            <a href="#skills" class="block text-base font-medium text-slate-300 hover:text-accent mobile-link">Skills</a>
+            <a href="#projects" class="block text-base font-medium text-slate-300 hover:text-accent mobile-link">Projects</a>
+            <a href="#testimonials" class="block text-base font-medium text-slate-300 hover:text-accent mobile-link">Testimonials</a>
+            <a href="#services" class="block text-base font-medium text-slate-300 hover:text-accent mobile-link">Services</a>
+            <a href="#contact" class="block text-base font-medium text-slate-300 hover:text-accent mobile-link">Get in touch</a>
+            <div class="pt-2">
+                <a href="Farah_Mohamed_Ismail _Hassan_CV edit_3.pdf" download="Farah_Mohamed_Ismail_CV.pdf" class="w-full py-3 rounded-xl bg-gradient-to-r from-accent to-secondary text-dark font-semibold text-center block shadow-lg">
+                    <i class="fa-solid fa-download mr-2"></i> Download CV
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="relative z-10 pt-20">
+        <!-- 1. HOME -->
+        <section id="home" class="min-h-[90vh] flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-950/60 border border-cyan-800/40 text-accent text-xs font-semibold tracking-wide uppercase">
+                        <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+                        Creative Graphic Designer
+                    </div>
+                    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-tight">
+                        Hi, I'm <span class="bg-gradient-to-r from-cyan-400 via-teal-300 to-indigo-400 bg-clip-text text-transparent">Farah Elnagar</span>
+                    </h1>
+                    <p class="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
+                        Passionate graphic designer specialized in crafting professional Business Cards, striking Brand Logos, and high-converting Social Media Ads.
+                    </p>
+                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
+                        <a href="#projects" class="px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-500 text-dark font-bold text-base shadow-xl shadow-cyan-500/25 hover:scale-105 transition-all flex items-center gap-2 group">
+                            <span>View Projects</span>
+                            <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                        <a href="Farah_Mohamed_Ismail _Hassan_CV edit_3.pdf" download="Farah_Mohamed_Ismail_CV.pdf" class="px-8 py-4 rounded-xl glass-card text-white font-semibold text-base hover:bg-slate-800/80 transition-all border border-slate-700 flex items-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-download text-accent"></i> Download CV
+                        </a>
+                    </div>
+                </div>
+                <div class="lg:col-span-5 flex justify-center">
+                    <div class="relative w-72 h-72 sm:w-96 sm:h-96">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-accent to-secondary rounded-3xl blur-2xl opacity-30 animate-pulse"></div>
+                        <div class="relative w-full h-full rounded-3xl glass-card p-3 glow-box border border-cyan-500/30 overflow-hidden group">
+                            <img src="ChatGPT Image Oct 6, 2026, 03_44_31 PM.png" alt="Farah Elnagar" class="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. ABOUT -->
+        <section id="about" class="py-24 px-4 sm:px-6 lg:px-8 bg-slate-900/40">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">About Me</h2>
+                    <div class="w-20 h-1.5 bg-accent mx-auto rounded-full mb-6"></div>
+                    <p class="text-slate-300 text-lg">Expert in creating professional Business Cards, custom Brand Logos, and captivating Social Media Ads.</p>
+                </div>
+                <div class="glass-card p-8 rounded-3xl max-w-3xl mx-auto text-slate-300 space-y-4 border border-slate-800">
+                    <p class="leading-relaxed">
+                        I am Farah Elnagar, a professional graphic designer and educational technology graduate[cite: 8]. I specialize in translating brand visions into exceptional visual masterpieces, focusing heavily on <strong class="text-accent">Business Cards, eye-catching Social Media Ads, and unique Brand Logos</strong> that establish strong corporate and personal identities.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. EDUCATION -->
+        <section id="education" class="py-24 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Education</h2>
+                    <div class="w-20 h-1.5 bg-accent mx-auto rounded-full mb-6"></div>
+                    <p class="text-slate-300 text-lg">Academic excellence and specialized university background.</p>
+                </div>
+                <div class="max-w-3xl mx-auto glass-card p-8 rounded-3xl border border-cyan-500/30 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 px-6 py-2 bg-gradient-to-l from-accent to-secondary text-dark text-xs font-bold rounded-bl-2xl">
+                        Grade: Excellent (امتياز)
+                    </div>
+                    <div class="flex items-start gap-5">
+                        <div class="w-14 h-14 rounded-2xl bg-cyan-950 text-accent flex items-center justify-center text-2xl shrink-0">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl sm:text-2xl font-bold text-white mb-2">B.Sc. in Educational Technology (Computer Science Division)</h3>
+                            <h4 class="text-accent font-medium mb-3">Faculty of Specific Education, Zagazig University (2026)[cite: 8]</h4>
+                            <p class="text-slate-300 text-sm leading-relaxed">
+                                Graduated with <strong class="text-accent">Excellent (امتياز)</strong> honors from Zagazig University, specializing in Computer Science and Educational Technology. Built exceptional academic and practical expertise combining advanced technical software development with professional visual design principles.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. EXPERIENCE -->
+        <section id="experience" class="py-24 px-4 sm:px-6 lg:px-8 bg-slate-900/40">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Experience & Training</h2>
+                    <div class="w-20 h-1.5 bg-accent mx-auto rounded-full mb-6"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="glass-card p-8 rounded-3xl border border-slate-800">
+                        <h3 class="text-xl font-bold text-white mb-2">NTI Scholarship[cite: 8]</h3>
+                        <p class="text-slate-300 text-sm">National Telecommunication Institute intensive training program[cite: 8].</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-3xl border border-slate-800">
+                        <h3 class="text-xl font-bold text-white mb-2">DEPI Scholarship[cite: 8]</h3>
+                        <p class="text-slate-300 text-sm">Digital Egypt Pioneers Initiative advanced digital development[cite: 8].</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-3xl border border-slate-800">
+                        <h3 class="text-xl font-bold text-white mb-2">Freelance Designer</h3>
+                        <p class="text-slate-300 text-sm">Designing high-end Business Cards, unique Logos, and Social Media Ads for clients.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. SKILLS -->
+        <section id="skills" class="py-24 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Graphic Design Skills</h2>
+                    <div class="w-20 h-1.5 bg-accent mx-auto rounded-full mb-6"></div>
+                    <p class="text-slate-300 text-lg">Specialized tools and core competencies in visual design.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                    <div class="glass-card p-8 rounded-3xl border border-slate-800">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-950 text-accent flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-palette"></i>
+                        </div>
+                        <h3 class="font-bold text-white text-lg mb-3">Design Specializations</h3>
+                        <ul class="space-y-2 text-sm text-slate-300">
+                            <li><i class="fa-solid fa-check text-accent mr-2"></i>Social Media Ad Campaigns</li>
+                            <li><i class="fa-solid fa-check text-accent mr-2"></i>Professional Business Cards</li>
+                            <li><i class="fa-solid fa-check text-accent mr-2"></i>Custom Brand Logos</li>
+                            <li><i class="fa-solid fa-check text-accent mr-2"></i>Creative Promotional Posters</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card p-8 rounded-3xl border border-slate-800">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-950 text-accent flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-pen-nib"></i>
+                        </div>
+                        <h3 class="font-bold text-white text-lg mb-3">Software & Tools</h3>
+                        <ul class="space-y-2 text-sm text-slate-300">
+                            <li><i class="fa-solid fa-check text-accent mr-2"></i>Adobe Photoshop</li>
+                            <li><i class="fa-solid fa-check text-accent mr-2"></i>Adobe Illustrator</li>
+                            <li><i class="fa-solid fa-check text-accent mr-2"></i>Figma & Canva</li>
+                            <li><i class="fa-solid fa-check text-accent mr-2"></i>Visual Branding Suites</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card p-8 rounded-3xl border border-slate-800">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-950 text-accent flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <h3 class="font-bold text-white text-lg mb-3">Design Competencies</h3>
+                        <ul class="space-y-2 text-sm text-slate-300">
+                            <li><i class="fa-solid fa-check text-accent mr-2"></i>Color Theory & Typography</li>
+                            <li><i class="fa-solid fa-check text-accent mr-2"></i>Detail-Oriented Precision</li>
+                            <li><i class="fa-solid fa-check text-accent mr-2"></i>Fast Creative Execution</li>
+                            <li><i class="fa-solid fa-check text-accent mr-2"></i>Client-Centric Adaptability</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. PROJECTS -->
+        <section id="projects" class="py-24 px-4 sm:px-6 lg:px-8 bg-slate-900/40">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Projects</h2>
+                    <div class="w-20 h-1.5 bg-accent mx-auto rounded-full mb-6"></div>
+                    <p class="text-slate-300 text-lg">Explore my work in Social Media Ads, Brand Logos, and Business Cards. Click "View Details" to see image galleries.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Project 1: Social Media Ads -->
+                    <div class="glass-card rounded-3xl overflow-hidden border border-slate-800 flex flex-col group">
+                        <div class="relative h-64 overflow-hidden bg-slate-950">
+                            <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800" alt="Social Media Ads" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-90">
+                            <span class="absolute top-4 left-4 px-3 py-1 rounded-full bg-dark/90 backdrop-blur-md text-accent text-xs font-semibold">Social Media Ads</span>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-2">Social Media Ad Campaigns</h3>
+                                <p class="text-slate-300 text-sm line-clamp-2 mb-4">High-impact visual advertisements designed specifically for marketing, engagement, and brand conversions.</p>
+                            </div>
+                            <button onclick="openModal('Social Media Ad Campaigns', 'Created engaging promotional graphic assets and social media ad banners optimized for high click-through rates, brand visibility, and target audience engagement.', ['https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800', 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&q=80&w=800'], 'Photoshop, Illustrator')" class="w-full py-2.5 rounded-xl bg-cyan-950 text-accent font-semibold text-sm border border-cyan-800/50 hover:bg-cyan-900 transition-all cursor-pointer">
+                                <i class="fa-solid fa-eye mr-2"></i> View Details
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Project 2: Brand Logos -->
+                    <div class="glass-card rounded-3xl overflow-hidden border border-slate-800 flex flex-col group">
+                        <div class="relative h-64 overflow-hidden bg-slate-950">
+                            <img src="https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&q=80&w=800" alt="Brand Logos" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-90">
+                            <span class="absolute top-4 left-4 px-3 py-1 rounded-full bg-dark/90 backdrop-blur-md text-accent text-xs font-semibold">Brand Logos</span>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-2">Brand Logos & Identity</h3>
+                                <p class="text-slate-300 text-sm line-clamp-2 mb-4">Distinctive brand logos built to establish unique corporate identity and memorable market presence.</p>
+                            </div>
+                            <button onclick="openModal('Brand Logos & Identity', 'Designed custom minimalist brand logos and complete visual identity guidelines tailored to communicate core company values effectively.', ['https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&q=80&w=800', 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&q=80&w=800'], 'Adobe Illustrator')" class="w-full py-2.5 rounded-xl bg-cyan-950 text-accent font-semibold text-sm border border-cyan-800/50 hover:bg-cyan-900 transition-all cursor-pointer">
+                                <i class="fa-solid fa-eye mr-2"></i> View Details
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Project 3: Business Cards -->
+                    <div class="glass-card rounded-3xl overflow-hidden border border-slate-800 flex flex-col group">
+                        <div class="relative h-64 overflow-hidden bg-slate-950">
+                            <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=800" alt="Business Cards" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-90">
+                            <span class="absolute top-4 left-4 px-3 py-1 rounded-full bg-dark/90 backdrop-blur-md text-accent text-xs font-semibold">Business Cards</span>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-2">Professional Business Cards</h3>
+                                <p class="text-slate-300 text-sm line-clamp-2 mb-4">Elegant and professional business card layouts designed to leave an unforgettable first impression.</p>
+                            </div>
+                            <button onclick="openModal('Professional Business Cards', 'Crafted modern, sleek, and professional business cards with premium typography and clean alignment for corporate clients.', ['https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=800', 'https://images.unsplash.com/photo-1542744094-3a31243264d0?auto=format&fit=crop&q=80&w=800'], 'Photoshop, Illustrator')" class="w-full py-2.5 rounded-xl bg-cyan-950 text-accent font-semibold text-sm border border-cyan-800/50 hover:bg-cyan-900 transition-all cursor-pointer">
+                                <i class="fa-solid fa-eye mr-2"></i> View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. TESTIMONIALS -->
+        <section id="testimonials" class="py-24 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Testimonials</h2>
+                    <div class="w-20 h-1.5 bg-accent mx-auto rounded-full mb-6"></div>
+                    <p class="text-slate-300 text-lg">What mentors and clients say about my work.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Testimonial 1 -->
+                    <div class="glass-card p-8 rounded-3xl border border-slate-800 relative flex flex-col justify-between">
+                        <div>
+                            <div class="flex text-amber-400 gap-1 mb-4 text-sm">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                                "Farah designed extraordinary business cards and social media ads for our brand. Her creativity and attention to detail are truly unmatched!"
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-3 pt-4 border-t border-slate-800/80">
+                            <div class="w-10 h-10 rounded-full bg-cyan-950 text-accent font-bold flex items-center justify-center">MK</div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">Mahmoud Khaled</h4>
+                                <p class="text-xs text-slate-400">Marketing Entrepreneur</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Testimonial 2 -->
+                    <div class="glass-card p-8 rounded-3xl border border-slate-800 relative flex flex-col justify-between">
+                        <div>
+                            <div class="flex text-amber-400 gap-1 mb-4 text-sm">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                                "An exceptional graduate from Zagazig University. Her expertise in logo design and digital graphics stands out remarkably in every project she delivers."
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-3 pt-4 border-t border-slate-800/80">
+                            <div class="w-10 h-10 rounded-full bg-cyan-950 text-accent font-bold flex items-center justify-center">DR</div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">Dr. Rania Ahmed</h4>
+                                <p class="text-xs text-slate-400">University Professor</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Testimonial 3 -->
+                    <div class="glass-card p-8 rounded-3xl border border-slate-800 relative flex flex-col justify-between">
+                        <div>
+                            <div class="flex text-amber-400 gap-1 mb-4 text-sm">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                                "Farah's work on our corporate identity and logo was phenomenal. She is fast, precise, and highly professional throughout the process."
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-3 pt-4 border-t border-slate-800/80">
+                            <div class="w-10 h-10 rounded-full bg-cyan-950 text-accent font-bold flex items-center justify-center">AS</div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">Ahmed Samir</h4>
+                                <p class="text-xs text-slate-400">Business Owner</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. SERVICES -->
+        <section id="services" class="py-24 px-4 sm:px-6 lg:px-8 bg-slate-900/40">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Graphic Design Services</h2>
+                    <div class="w-20 h-1.5 bg-accent mx-auto rounded-full mb-6"></div>
+                    <p class="text-slate-300 text-lg">Professional design solutions tailored to elevate your brand identity and marketing.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="glass-card p-8 rounded-3xl border border-slate-800 hover:border-cyan-500/40 transition-all">
+                        <div class="w-14 h-14 rounded-2xl bg-cyan-950 text-accent flex items-center justify-center text-2xl mb-6">
+                            <i class="fa-solid fa-bullhorn"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">Social Media Ads</h3>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Crafting visually stunning, high-converting social media advertising campaigns designed to boost engagement and brand reach.
+                        </p>
+                    </div>
+                    <div class="glass-card p-8 rounded-3xl border border-slate-800 hover:border-cyan-500/40 transition-all">
+                        <div class="w-14 h-14 rounded-2xl bg-cyan-950 text-accent flex items-center justify-center text-2xl mb-6">
+                            <i class="fa-solid fa-id-badge"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">Business Cards</h3>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Designing professional, sleek, and elegant business cards that leave an unforgettable first impression on your clients.
+                        </p>
+                    </div>
+                    <div class="glass-card p-8 rounded-3xl border border-slate-800 hover:border-cyan-500/40 transition-all">
+                        <div class="w-14 h-14 rounded-2xl bg-cyan-950 text-accent flex items-center justify-center text-2xl mb-6">
+                            <i class="fa-solid fa-feather-pointed"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">Brand Logos & Posters</h3>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Building unique brand logos and striking promotional event posters tailored to represent your exact corporate identity.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. GET IN TOUCH -->
+        <section id="contact" class="py-24 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Get in touch</h2>
+                    <div class="w-20 h-1.5 bg-accent mx-auto rounded-full mb-6"></div>
+                    <p class="text-slate-300 text-lg">Have a project in mind or want to collaborate? Reach out directly!</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                    <div class="lg:col-span-5 space-y-6">
+                        <div class="glass-card p-6 rounded-2xl flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-cyan-950 text-accent flex items-center justify-center text-xl shrink-0">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm text-slate-400">Email Me</h4>
+                                <a href="mailto:farahelnagar30@gmail.com" class="text-white font-semibold hover:text-accent transition-colors">farahelnagar30@gmail.com</a>
+                            </div>
+                        </div>
+                        <div class="glass-card p-6 rounded-2xl flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-cyan-950 text-accent flex items-center justify-center text-xl shrink-0">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm text-slate-400">Phone / WhatsApp</h4>
+                                <a href="https://wa.me/201093524884" target="_blank" class="text-white font-semibold hover:text-accent transition-colors">+20 01093524884</a>
+                            </div>
+                        </div>
+                        <!-- Social Profiles Links -->
+                        <div class="glass-card p-6 rounded-2xl space-y-3">
+                            <h4 class="text-sm text-slate-400 mb-2">Professional Profiles</h4>
+                            <div class="flex flex-wrap gap-3">
+                                <a href="https://www.linkedin.com/in/farah-elnagar" target="_blank" class="px-4 py-2 rounded-xl bg-cyan-950 text-accent text-xs font-semibold border border-cyan-800/50 hover:bg-cyan-900 transition-colors flex items-center gap-2">
+                                    <i class="fa-brands fa-linkedin-in"></i> LinkedIn
+                                </a>
+                                <a href="https://www.behance.net/farahelnagar1" target="_blank" class="px-4 py-2 rounded-xl bg-cyan-950 text-accent text-xs font-semibold border border-cyan-800/50 hover:bg-cyan-900 transition-colors flex items-center gap-2">
+                                    <i class="fa-brands fa-behance"></i> Behance
+                                </a>
+                                <a href="https://nafezly.com/u/farahelnagar30" target="_blank" class="px-4 py-2 rounded-xl bg-cyan-950 text-accent text-xs font-semibold border border-cyan-800/50 hover:bg-cyan-900 transition-colors flex items-center gap-2">
+                                    <i class="fa-solid fa-briefcase"></i> Nafezly
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-7">
+                        <form onsubmit="handleContactSubmit(event)" class="glass-card p-8 rounded-3xl space-y-6 border border-slate-800">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-300 mb-2">Your Name</label>
+                                    <input type="text" id="contactName" required class="w-full px-4 py-3 rounded-xl bg-dark border border-slate-700 text-white focus:outline-none focus:border-accent" placeholder="John Doe">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-300 mb-2">Your Email</label>
+                                    <input type="email" id="contactEmail" required class="w-full px-4 py-3 rounded-xl bg-dark border border-slate-700 text-white focus:outline-none focus:border-accent" placeholder="john@example.com">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Subject</label>
+                                <input type="text" id="contactSubject" required class="w-full px-4 py-3 rounded-xl bg-dark border border-slate-700 text-white focus:outline-none focus:border-accent" placeholder="Project Inquiry">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Message</label>
+                                <textarea id="contactMessage" rows="4" required class="w-full px-4 py-3 rounded-xl bg-dark border border-slate-700 text-white focus:outline-none focus:border-accent" placeholder="Hello Farah, I would like to discuss..."></textarea>
+                            </div>
+                            <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-accent to-secondary text-dark font-bold shadow-xl shadow-cyan-500/20 hover:opacity-90 transition-opacity cursor-pointer">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal for Project Details -->
+    <div id="projectModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark/80 backdrop-blur-md hidden">
+        <div class="glass-card max-w-3xl w-full p-6 sm:p-8 rounded-3xl border border-slate-700 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal()" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center cursor-pointer">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <h3 id="modalTitle" class="text-2xl font-bold text-white mb-3">Title</h3>
+            <p id="modalTech" class="text-accent text-sm font-semibold mb-4">Tech</p>
+            <p id="modalDesc" class="text-slate-300 text-sm mb-6">Desc</p>
+            <div id="modalGallery" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+        </div>
+    </div>
+
+    <script>
+        // Cursor movement
+        const dot = document.getElementById('cursorDot');
+        const ring = document.getElementById('cursorRing');
+        window.addEventListener('mousemove', e => {
+            dot.style.left = `${e.clientX}px`;
+            dot.style.top = `${e.clientY}px`;
+            ring.style.left = `${e.clientX}px`;
+            ring.style.top = `${e.clientY}px`;
+        });
+
+        // Modal functions for projects
+        function openModal(title, desc, images, tech) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalDesc').innerText = desc;
+            document.getElementById('modalTech').innerText = `Tools: ${tech}`;
+            const gallery = document.getElementById('modalGallery');
+            gallery.innerHTML = '';
+            images.forEach(url => {
+                const img = document.createElement('img');
+                img.src = url;
+                img.className = 'w-full h-40 object-cover rounded-xl border border-slate-700';
+                gallery.appendChild(img);
+            });
+            document.getElementById('projectModal').classList.remove('hidden');
+        }
+        function closeModal() {
+            document.getElementById('projectModal').classList.add('hidden');
+        }
+
+        // Contact Form Submission
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('contactName').value;
+            alert(`Thank you ${name}! Your message has been sent successfully.`);
+            e.target.reset();
+        }
+    </script>
+</body>
+</html>
